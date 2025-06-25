@@ -2,18 +2,37 @@ import React, { useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { assets } from '../assets/assets'
 import { useAppContext } from '../context/AppContext'
+import toast from 'react-hot-toast'
 
 
 
 const Navbar = () => {
     const [open, setOpen] = React.useState(false)
-    const {user, setUser,setShowUserLogin,navigate,setSearchQuery,searchQuery,getCartCount} = useAppContext()
+    const {user, setUser,setShowUserLogin,navigate,setSearchQuery,searchQuery,getCartCount,axios} = useAppContext()
 
 
     const logout = async ()=>{
-        setUser(null)
-        navigate('/')
+        try {
+            const {data}= await axios.get('/api/user/logout')
+            if(data.success){
+                toast.success(data.message)
+                setUser(null)
+                navigate('/')
+            }else{
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+        
     }
+
+    // useEffect(() => {
+    //     navigate('/seller');
+    // }, []); // ✅ Runs only once on component mount
+
+   
+
 
     useEffect(()=>{
         if(searchQuery.length > 0){
@@ -33,6 +52,7 @@ const Navbar = () => {
 
     {/* Desktop Menu */}
     <div className="hidden sm:flex items-center gap-8">
+       <NavLink to='seller'>Seller Dashboard</NavLink>
        <NavLink to='/'>Home</NavLink>
        <NavLink to='products'>All Products</NavLink>
        <NavLink to='/'>Contact</NavLink>
@@ -81,6 +101,7 @@ const Navbar = () => {
     {   open && (
         <div className={`${open ? 'flex' : 'hidden'} absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden`}>
         <NavLink to='/' onClick={()=> setOpen(false)}>Home</NavLink>
+        <NavLink to='/' onClick={()=> setOpen(false)}>Sellerdashboard</NavLink>
         <NavLink to='products' onClick={()=> setOpen(false)}>All Products</NavLink>
         {user &&
         

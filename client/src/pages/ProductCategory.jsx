@@ -15,6 +15,7 @@ const ProductCategory = () => {
 === category) 
   return (
     <div>
+    
       {searchCategory && (
         <div className='flex flex-col items-end w-max'>
             <p className='text-2xl font-medium'>{searchCategory.text.toUpperCase()}</p>
